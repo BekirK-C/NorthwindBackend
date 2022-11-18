@@ -6,12 +6,14 @@ namespace Business.Constants
 {
     public static class Messages
     {
-        public static string ProductAdded = "Ürün başarıyla eklendi!";
+        public static string ProductAdded = "Ürün başarıyla eklendi.";
         public static string ProductDeleted = "Ürün başarıyla silindi!";
         public static string ProductUpdated = "Ürün başarıyla güncellendi!";
-        public static string ProductsListed = "Ürünler başarıyla listelendi!";
+        public static string ProductsListed = "Ürünler başarıyla listelendi.";
         public static string ProductCountOfCategoryError = "Bir kategoride 10 dan fazla urun olmamali";
         public static string ProductNameAlreadyExists = "Bu isimde zaten baska bir urun var";
+
+        public static string UserAdded = "Kullanıcı başarıyla eklendi.";
 
         public static string CategoryAdded = "Kategori başarıyla eklendi!";
         public static string CategoryDeleted = "Kategori başarıyla silindi!";
@@ -28,5 +30,6 @@ namespace Business.Constants
         public static string SuccessfulLogin = "Basarili giris";
         public static string UserAlreadyExists = "Kullanici mevcut";
         public static string AccessTokenCreated = "Token olusturuldu";
+        
     }
 }
