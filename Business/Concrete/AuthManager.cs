@@ -44,7 +44,7 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(userToCheck.Data, Messages.SuccessfulLogin);
         }
 
-        public IDataResult<User> Register(UserForRegister userForRegister, string password)
+        public IDataResult<User> Register(UserForRegisterDto userForRegister, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -61,9 +61,9 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 
-        public IResult UserExist(string email)
+        public IResult UserExists(string email)
         {
-            if (_userService.GetByMail(email) != null)
+            if (_userService.GetByMail(email).Data != null)
             {
                 return new ErrorResult(Messages.UserAlreadyExists);
             }
@@ -71,4 +71,3 @@ namespace Business.Concrete
         }
     }
 }
-
