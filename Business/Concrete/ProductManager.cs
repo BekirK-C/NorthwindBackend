@@ -31,6 +31,7 @@ namespace Business.Concrete
 
         [TransactionScopeAspect]
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
             //ValidationTool.Validate(new ProductValidator(), product);
@@ -49,7 +50,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId), Messages.ProductsListed);
         }
 
-        [CacheAspect(duration:1)]
+        [CacheAspect(duration:10)]
         public IDataResult<List<Product>> GetList()
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList(), Messages.ProductsListed);
