@@ -8,6 +8,7 @@ using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace Business.Concrete
         // Cross Cutting Concerns - Validation, Cache, Log, Performance, Authorization, Transaction
         // AOP - Aspect Oriented Programming
 
-        IProductDal _productDal;
+        private IProductDal _productDal;
 
         public ProductManager(IProductDal productDal)
         {
