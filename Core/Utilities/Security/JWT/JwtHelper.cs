@@ -24,12 +24,13 @@ namespace Core.Utilities.Security.JWT
 
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-            _acccessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
+            
         }
 
         public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
         {
             //token oluştururken kullanacağımız anahtar.
+            _acccessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
             var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
@@ -46,7 +47,7 @@ namespace Core.Utilities.Security.JWT
         {
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
-                audience: tokenOptions.Auidence,
+                audience: tokenOptions.Audience,
                 expires: _acccessTokenExpiration,
                 notBefore: DateTime.Now,
                 claims: SetClaims(user, operationClaims),
@@ -60,8 +61,8 @@ namespace Core.Utilities.Security.JWT
             var claims = new List<Claim>();
             // claims.Add(new Claim("email", user.Email));    claim'i bu şekilde kullanmak yerine claim için bir extension oluşturduk.
             claims.AddNameIdentifier(user.Id.ToString());
-            claims.AddName($"{user.FirstName} {user.LastName}");
             claims.AddEmail(user.Email);
+            claims.AddName($"{user.FirstName} {user.LastName}");
             claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
             return claims;
         }

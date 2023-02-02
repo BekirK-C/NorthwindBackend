@@ -5,11 +5,6 @@ using Castle.DynamicProxy;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using Module = Autofac.Module;
 using Autofac.Extras.DynamicProxy;
 using Core.Utilities.Interceptors;
 
