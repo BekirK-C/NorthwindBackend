@@ -19,7 +19,6 @@ namespace WebAPI.Controllers
 
         [HttpGet("getall")]
         //[Authorize(Roles = "admin")]
-#warning Authorize attribute doğru çalışmıyor!
         public IActionResult GetList()
         {
             var result = _productService.GetList();
