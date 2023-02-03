@@ -3,9 +3,11 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -56,9 +58,10 @@ namespace Business.Concrete
         }
 
         //[SecuredOperation("admin")]
-        //[CacheAspect(duration:10)]
-        [PerformanceAspect(3)]
+        [CacheAspect(duration:10)]
+        //[PerformanceAspect(3)]
         //Output'da bilgilendirme yapılıyor.
+        [LogAspect(typeof(DatabaseLogger))]
         public IDataResult<List<Product>> GetList()
         {
             Thread.Sleep(3000);
