@@ -30,6 +30,8 @@ namespace Business.Constants
         public static string SuccessfulLogin = "Basarili giris";
         public static string UserAlreadyExists = "Kullanici mevcut";
         public static string AccessTokenCreated = "Token olusturuldu";
+
+        public static string WrongLoggerType = "Hatalo Loglama Sınıfı";
         
     }
 }

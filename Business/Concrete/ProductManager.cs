@@ -3,6 +3,7 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Exception;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Transaction;
@@ -59,8 +60,7 @@ namespace Business.Concrete
 
         //[SecuredOperation("admin")]
         [CacheAspect(duration:10)]
-        //[PerformanceAspect(3)]
-        //Output'da bilgilendirme yapılıyor.
+        //[PerformanceAspect(3)]    //Output'da bilgilendirme yapılıyor.
         [LogAspect(typeof(DatabaseLogger))]
         public IDataResult<List<Product>> GetList()
         {
@@ -69,6 +69,7 @@ namespace Business.Concrete
 
         }
 
+        // [ExceptionLogAspect(typeof(FileLogger))]   Bu şekilde hepsine tek tek yazmak yerine AspectInterceptorSelector'dan merkezi hale getiriyoruz
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList(), Messages.ProductsListed);
