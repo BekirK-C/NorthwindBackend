@@ -31,10 +31,12 @@ namespace Business.Concrete
         // AOP - Aspect Oriented Programming
 
         private IProductDal _productDal;
+        private ICategoryService _categoryService;
 
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
         }
 
 
@@ -76,10 +78,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList(), Messages.ProductsListed);
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Product product)
         {
             // IResult result = CheckIfProductNameExists(product.ProductName);  BusinessRules ile yapacağım
-            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName));
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), ChecIfCategoryIsEnabled());
             if (result != null)
             {
                 return result;
@@ -89,11 +92,20 @@ namespace Business.Concrete
 
         }
 
-        private IResult CheckIfProductNameExists(string? productName)
+        private IResult CheckIfProductNameExists(string productName)
         {
             if (_productDal.Get(p => p.ProductName == productName) != null)
             {
                 return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult ChecIfCategoryIsEnabled()
+        {
+            if (_categoryService.GetList().Data.Count > 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
             }
             return new SuccessResult();
         }

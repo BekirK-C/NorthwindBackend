@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using FluentValidation.Internal;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -33,11 +35,32 @@ namespace Core.Extensions
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+            string message = "Internal Server Error!";
+
+            if (e.GetType() == typeof(ValidationException))
+            {
+                message = e.Message;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+
+            if (e.GetType() == typeof(AuthorizeException))
+            {
+                message = e.Message;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            }
+
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = "Internal Server Error!"
-            }.ToString());
+                Message = message
+            }.ToString()); ;
+        }
+    }
+    public class AuthorizeException : Exception
+    {
+        public AuthorizeException(string message) : base(message)
+        {
+
         }
     }
 }
