@@ -10,6 +10,7 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -36,7 +37,7 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
-        
+
         //[TransactionScopeAspect]
         //[ValidationAspect(typeof(ProductValidator))]
         //[CacheRemoveAspect("IProductService.Get")]
@@ -59,7 +60,7 @@ namespace Business.Concrete
         }
 
         //[SecuredOperation("admin")]
-        [CacheAspect(duration:10)]
+        [CacheAspect(duration: 10)]
         //[PerformanceAspect(3)]    //Output'da bilgilendirme yapılıyor.
         [LogAspect(typeof(DatabaseLogger))]
         public IDataResult<List<Product>> GetList()
@@ -77,8 +78,24 @@ namespace Business.Concrete
 
         public IResult Update(Product product)
         {
+            // IResult result = CheckIfProductNameExists(product.ProductName);  BusinessRules ile yapacağım
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName));
+            if (result != null)
+            {
+                return result;
+            }
             _productDal.Update(product);
             return new SuccessResult(Messages.ProductUpdated);
+
+        }
+
+        private IResult CheckIfProductNameExists(string? productName)
+        {
+            if (_productDal.Get(p => p.ProductName == productName) != null)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }
